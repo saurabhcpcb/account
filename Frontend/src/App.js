@@ -1,6 +1,5 @@
 import React from 'react'
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 // import Login from './components/login.component'
@@ -21,7 +20,7 @@ function App() {
               <Route exact path="/" element={<Home />} />
               {/* <Route path="/sign-in" element={<Login />} />
               <Route path="/sign-up" element={<SignUp />} /> */}
-              <Route path="/home" element={<Home />} />
+              <Route path="/home.html" element={<Home />} />
             </Routes>
           </div>
         </div>

@@ -1,7 +1,43 @@
 import { Link } from 'react-router-dom';
 import image from '../image/image1.jpg';
+import { useState } from "react";
 
 function Home() {
+
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState(null);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            // Make an API call to authenticate the user
+            const response = await fetch('http://localhost:5000/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Login failed');
+            }
+
+            const data = await response.json();
+
+            // Assuming the API returns a token
+            localStorage.setItem('token', data.token);
+
+            // Redirect to another page or set authentication state
+            window.location.href = '/dashboard';
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
+
     return (
         <div className="container px-4 px-lg-5">
 
@@ -11,15 +47,17 @@ function Home() {
                     {/* <h1 className="font-weight-light">Business Name or Tagline</h1>
                     <p>This is a template that is great for small businesses. It doesn't have too much fancy flare to it, but it makes a great use of the standard Bootstrap core components. Feel free to use this template for any project you want!</p>
                     <a className="btn btn-primary" href="#!">Call to Action!</a> */}
-                    <form>
+                    <form onSubmit={handleSubmit}>
                         <h3>Sign In</h3>
-
+                        {error && <p style={{ color: 'red' }}>{error}</p>}
                         <div className="mb-3">
                             <label>Email address</label>
                             <input
                                 type="email"
                                 className="form-control"
                                 placeholder="Enter email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
                             />
                         </div>
 
@@ -29,6 +67,8 @@ function Home() {
                                 type="password"
                                 className="form-control"
                                 placeholder="Enter password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
 
@@ -58,7 +98,9 @@ function Home() {
             </div>
 
             <div className="card text-white bg-secondary my-5 py-4 text-center">
-                <div className="card-body"><p className="text-white m-0">The Central Pollution Control Board (CPCB), statutory organisation, was constituted in September, 1974 under the Water (Prevention and Control of Pollution) Act, 1974. Further, CPCB was entrusted with the powers and functions under the Air (Prevention and Control of Pollution) Act, 1981.</p></div>
+                <div className="card-body">
+                    <p className="text-white m-0">Receipts & Expenditure Monitoring Portal for the Funds under (i) EPC account, (ii) NGT accounts, (iii) CPCB self-generated funds under different mechanisms accounts and (iv) EC by CPCB account (REMPFENCE)</p>
+                </div>
             </div>
 
             <div className="row gx-4 gx-lg-5">
