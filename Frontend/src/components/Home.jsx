@@ -1,12 +1,35 @@
 import { Link } from 'react-router-dom';
 import image from '../image/image1.jpg';
-import { useState } from "react";
+import refreshIcon from '../image/bootstrap-reboot.svg';
+import { useState, useEffect } from "react";
+import axios from 'axios';
 
 function Home() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
+    const [captchaImage, setCaptchaImage] = useState(null);
+
+
+    const fetchCaptcha = async () => {
+        try {
+            const res = await axios.get('http://localhost:5000/api/auth/create-captcha');
+            
+            setCaptchaImage(res.data);
+        } catch (err) {
+            console.error('Error fetching CAPTCHA', err);
+        }
+    };
+    useEffect(() => {
+        fetchCaptcha();
+    }, []);
+
+    const refreshCaptcha = () =>{
+        fetchCaptcha();
+    }
+
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -42,7 +65,7 @@ function Home() {
         <div className="container px-4 px-lg-5">
 
             <div className="row gx-4 gx-lg-5 align-items-center my-5">
-                <div className="col-lg-7"><img className="img-fluid rounded mb-4 mb-lg-0" src={image} /></div>
+                <div className="col-lg-7"><img className="img-fluid rounded mb-4 mb-lg-0" style={{ height: "412px" }} src={image} /></div>
                 <div className="col-lg-5 wrap-form">
                     {/* <h1 className="font-weight-light">Business Name or Tagline</h1>
                     <p>This is a template that is great for small businesses. It doesn't have too much fancy flare to it, but it makes a great use of the standard Bootstrap core components. Feel free to use this template for any project you want!</p>
@@ -71,6 +94,30 @@ function Home() {
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                         </div>
+
+                        <div className="mb-3">
+                            <div className="col-lg-6 captcha-wrap">
+                                {captchaImage && (
+                                    <div className='captcha-img'
+                                        dangerouslySetInnerHTML={{ __html: captchaImage }}
+                                    />
+                                )}
+                                <div className='refresh-button'>
+                                    < img src={refreshIcon} onClick={refreshCaptcha} />
+                                </div>
+                            </div>
+                            <div className="col-lg-6 captcha-wrap">
+                                <label>Captcha</label>
+                                <input
+                                    type="password"
+                                    className="form-control"
+                                    placeholder="Enter password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
+                            </div>
+                        </div>
+
 
                         <div className="mb-3">
                             <div className="custom-control custom-checkbox">

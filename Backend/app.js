@@ -4,8 +4,10 @@ const authRoutes = require('./App/routes/auth.routes');
 const sequelize = require('./App/models/user.model').sequelize;
 const session = require('express-session');
 require('dotenv').config();
+const cors = require('cors');
 
 const app = express();
+app.use(cors());
 app.use(bodyParser.json());
 const PORT = process.env.PORT || 5000;
 
